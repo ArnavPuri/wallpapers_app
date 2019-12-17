@@ -47,10 +47,37 @@ class _WallpaperListState extends State<WallpaperList> {
                 child: Hero(
                   tag: snapshot.data[index].url,
                   child: Container(
+                    padding: EdgeInsets.all(12),
+                    child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Icon(
+                            Icons.thumb_up,
+                            color: Colors.white,
+                          ),
+                          SizedBox(width: 10,),
+                          Text(
+                            snapshot.data[index].upvotes.toString(),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.0,
+                              shadows: [
+                                Shadow(
+                                    color: Colors.black,
+                                    offset: Offset(1, 1),
+                                    blurRadius: 4)
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     decoration: BoxDecoration(
                         image: DecorationImage(
                             image:
-                                NetworkImage(snapshot.data[index].thumbnailUrl),
+                            NetworkImage(snapshot.data[index].thumbnailUrl),
                             fit: BoxFit.cover)),
                   ),
                 ),

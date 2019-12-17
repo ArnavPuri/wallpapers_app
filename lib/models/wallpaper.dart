@@ -2,6 +2,7 @@ class Wallpaper {
   String url;
   String title;
   String thumbnailUrl;
+  int upvotes;
 
   Wallpaper(this.url, this.title, this.thumbnailUrl);
 
@@ -9,6 +10,7 @@ class Wallpaper {
     this.url = data['data']['url'];
     this.title = data['data']['title'];
     this.thumbnailUrl = data['data']['thumbnail'];
+    this.upvotes = data['data']['ups'];
   }
 
   @override
