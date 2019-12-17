@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:wallpapers_app/detail.dart';
-import 'package:wallpapers_app/models/wallpaper.dart';
-import 'package:wallpapers_app/network_helper.dart';
+import 'package:wallpapers_app/wallpaper_list.dart';
 
 void main() => runApp(
       MaterialApp(
-        home: WallpapersList(),
+        home: HomePage(),
         debugShowCheckedModeBanner: false,
         theme: ThemeData().copyWith(
             primaryColor: Colors.black,
@@ -14,70 +12,47 @@ void main() => runApp(
       ),
     );
 
-class WallpapersList extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  _WallpapersListState createState() => _WallpapersListState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _WallpapersListState extends State<WallpapersList> {
-  NetworkHelper networkHelper = NetworkHelper();
-  Future<List<Wallpaper>> wallpapersList;
-
+class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    wallpapersList = networkHelper.getWallpapersList();
-  }
-
-  Future<List<Wallpaper>> fetchWallpapers() async {
-    return await networkHelper.getWallpapersList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('/r/Wallpapers'),
-      ),
-      backgroundColor: Colors.black,
-      body: FutureBuilder(
-        future: wallpapersList,
-        builder: (context, AsyncSnapshot<List<Wallpaper>> snapshot) {
-          if (snapshot.hasData) {
-            return GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 8.0,
-                  mainAxisSpacing: 8.0),
-              shrinkWrap: true,
-              itemCount: snapshot.data.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                WallpaperDetail(snapshot.data[index])));
-                  },
-                  child: Hero(
-                    tag: snapshot.data[index].url,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(24.0),
-                          image: DecorationImage(
-                              image: NetworkImage(snapshot.data[index].url),
-                              fit: BoxFit.cover)),
-                    ),
-                  ),
-                );
-              },
-            );
-          }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('/r/Wallpapers'),
+          bottom: TabBar(
+            indicatorColor: Theme
+                .of(context)
+                .accentColor,
+            unselectedLabelColor: Colors.white,
+            labelColor: Theme
+                .of(context)
+                .accentColor,
+            tabs: [
+              Tab(icon: Icon(Icons.new_releases)),
+              Tab(icon: Icon(Icons.show_chart)),
+              Tab(icon: Icon(Icons.whatshot)),
+            ],
+          ),
+        ),
+        backgroundColor: Colors.black,
+        body: TabBarView(
+          children: <Widget>[
+            WallpaperList(category: 'new'),
+            WallpaperList(category: 'top'),
+            WallpaperList(category: 'hot'),
+          ],
+        ),
       ),
     );
   }

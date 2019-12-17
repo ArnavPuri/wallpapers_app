@@ -1,12 +1,13 @@
 import 'dart:convert';
 
-import 'package:wallpapers_app/models/wallpaper.dart';
 import 'package:http/http.dart' as http;
+import 'package:wallpapers_app/models/wallpaper.dart';
 
 class NetworkHelper {
-  Future<List<Wallpaper>> getWallpapersList() async {
+  Future<List<Wallpaper>> getWallpapersList(String category) async {
     http.Response response =
-        await http.get('https://www.reddit.com/r/iWallpaper.json');
+    await http.get(
+        'https://www.reddit.com/r/iWallpaper/$category.json?t=month');
     if(response.statusCode == 200){
       Map<String, dynamic> resultMap = jsonDecode(response.body);
       List<dynamic> wallpapersData = resultMap['data']['children'];
