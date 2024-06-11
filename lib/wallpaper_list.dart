@@ -14,7 +14,8 @@ class WallpaperList extends StatefulWidget {
   _WallpaperListState createState() => _WallpaperListState();
 }
 
-class _WallpaperListState extends State<WallpaperList> {
+class _WallpaperListState extends State<WallpaperList>
+    with AutomaticKeepAliveClientMixin<WallpaperList> {
   late Future<List<Wallpaper>> wallpapersList;
   NetworkHelper networkHelper = NetworkHelper();
 
@@ -25,13 +26,16 @@ class _WallpaperListState extends State<WallpaperList> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: wallpapersList,
       builder: (context, AsyncSnapshot<List<Wallpaper>> snapshot) {
         if (snapshot.hasData) {
           return GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2, crossAxisSpacing: 1.0, mainAxisSpacing: 1.0),
             shrinkWrap: true,
             itemCount: snapshot.data?.length,
@@ -45,7 +49,7 @@ class _WallpaperListState extends State<WallpaperList> {
                               WallpaperDetail(snapshot.data![index])));
                 },
                 child: Hero(
-                  tag: snapshot.data![index].url,
+                  tag: snapshot.data![index].url + snapshot.data![index].title,
                   child: Container(
                     padding: EdgeInsets.all(12),
                     child: Align(
@@ -87,8 +91,10 @@ class _WallpaperListState extends State<WallpaperList> {
             },
           );
         }
-        return Center(
-          child: CircularProgressIndicator(),
+        return const Center(
+          child: CircularProgressIndicator(
+            color: Colors.amber,
+          ),
         );
       },
     );

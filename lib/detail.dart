@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 
 import 'package:path_provider/path_provider.dart';
@@ -12,7 +11,7 @@ import 'package:http/http.dart' as http;
 class WallpaperDetail extends StatefulWidget {
   final Wallpaper wallpaper;
 
-  WallpaperDetail(this.wallpaper);
+  const WallpaperDetail(this.wallpaper);
 
   @override
   _WallpaperDetailState createState() => _WallpaperDetailState();
@@ -56,20 +55,20 @@ class _WallpaperDetailState extends State<WallpaperDetail> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFFe91e63),
+        backgroundColor: Colors.amber,
       ));
     }
 
     scaffoldMessenger.showSnackBar(SnackBar(
       content: Text(
         message,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 12,
-          color: Colors.white,
+          color: Colors.black,
           fontWeight: FontWeight.bold,
         ),
       ),
-      backgroundColor: Color(0xFFe91e63),
+      backgroundColor: Colors.amber,
     ));
   }
 
@@ -80,16 +79,33 @@ class _WallpaperDetailState extends State<WallpaperDetail> {
         title: Text(widget.wallpaper.title),
         actions: <Widget>[
           IconButton(
-              icon: const Icon(Icons.file_download), onPressed: _saveImage)
+            icon: const Icon(Icons.file_download),
+            onPressed: _saveImage,
+            color: Colors.amber,
+          )
         ],
       ),
       body: SizedBox.expand(
         child: Hero(
-          tag: widget.wallpaper.url,
+          tag: widget.wallpaper.url + widget.wallpaper.title,
           child: Image(
-            image: NetworkImage(widget.wallpaper.url),
-            fit: BoxFit.cover,
-          ),
+              image: NetworkImage(widget.wallpaper.url),
+              fit: BoxFit.cover,
+              loadingBuilder: (BuildContext context, Widget child,
+                  ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) {
+                  return child;
+                }
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.amber,
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                            loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                );
+              }),
         ),
       ),
     );

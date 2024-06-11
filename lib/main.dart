@@ -6,9 +6,15 @@ void main() => runApp(
         home: HomePage(),
         debugShowCheckedModeBanner: false,
         theme: ThemeData().copyWith(
-            primaryColor: Colors.black,
-            hintColor: Colors.orange,
-            scaffoldBackgroundColor: Colors.black),
+          primaryColor: Colors.black,
+          hintColor: Colors.orange,
+          scaffoldBackgroundColor: Colors.black,
+          appBarTheme: const AppBarTheme(
+              backgroundColor: Colors.black,
+              iconTheme: IconThemeData(color: Colors.white),
+              actionsIconTheme: IconThemeData(color: Colors.white),
+              titleTextStyle: TextStyle(color: Colors.white, fontSize: 22)),
+        ),
       ),
     );
 
@@ -29,15 +35,18 @@ class _HomePageState extends State<HomePage> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('/r/Wallpapers'),
+          title: const Text('/r/Wallpapers'),
           bottom: TabBar(
             indicatorColor: Theme.of(context).hintColor,
             unselectedLabelColor: Colors.white,
             labelColor: Theme.of(context).hintColor,
             tabs: const [
-              Tab(icon: Icon(Icons.new_releases)),
-              Tab(icon: Icon(Icons.show_chart)),
-              Tab(icon: Icon(Icons.whatshot)),
+              Tab(
+                icon: Icon(Icons.card_giftcard),
+                text: "New",
+              ),
+              Tab(icon: Icon(Icons.show_chart), text: "Top"),
+              Tab(icon: Icon(Icons.whatshot), text: "Hot"),
             ],
           ),
         ),
