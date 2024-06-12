@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reddit_wallpapers_app/settings_screen.dart';
 import 'package:reddit_wallpapers_app/wallpaper_list.dart';
 
 void main() => runApp(
@@ -35,7 +36,19 @@ class _HomePageState extends State<HomePage> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('/r/Wallpapers'),
+          title: const Text('iWallpaper'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.settings),
+              onPressed: () => {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SettingsScreen()))
+              },
+              color: Colors.amber,
+            )
+          ],
           bottom: TabBar(
             indicatorColor: Theme.of(context).hintColor,
             unselectedLabelColor: Colors.white,
