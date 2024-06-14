@@ -50,51 +50,57 @@ class _WallpaperListState extends State<WallpaperList>
                 },
                 child: Hero(
                   tag: snapshot.data![index].url + snapshot.data![index].title,
-                  child: Container(
-                    padding: EdgeInsets.all(12),
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Icon(
-                            Icons.thumb_up,
-                            color: Colors.white,
+                  child: AspectRatio(
+                      aspectRatio: 9 / 16,
+                      child: Stack(
+                        children: [
+                          Image.network(
+                            snapshot.data![index].thumbnailUrl,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
                           ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            snapshot.data![index].upvotes.toString(),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.0,
-                              shadows: [
-                                Shadow(
-                                    color: Colors.black,
-                                    offset: Offset(1, 1),
-                                    blurRadius: 4)
+                          Positioned(
+                            bottom: 10,
+                            right: 10,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                const Icon(
+                                  Icons.thumb_up,
+                                  color: Colors.white70,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  snapshot.data![index].upvotes.toString(),
+                                  style: const TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 18.0,
+                                    shadows: [
+                                      Shadow(
+                                          color: Colors.black,
+                                          offset: Offset(1, 1),
+                                          blurRadius: 4)
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ),
                         ],
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: NetworkImage(
-                                snapshot.data![index].thumbnailUrl),
-                            fit: BoxFit.cover)),
-                  ),
+                      )),
                 ),
               );
             },
           );
         }
         return const Center(
-          child: CircularProgressIndicator(
-            color: Colors.amber,
-          ),
+          child: CircularProgressIndicator(),
         );
       },
     );

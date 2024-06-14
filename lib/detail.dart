@@ -68,7 +68,6 @@ class _WallpaperDetailState extends State<WallpaperDetail> {
           fontWeight: FontWeight.bold,
         ),
       ),
-      backgroundColor: Colors.amber,
     ));
   }
 
@@ -81,7 +80,6 @@ class _WallpaperDetailState extends State<WallpaperDetail> {
           IconButton(
             icon: const Icon(Icons.file_download),
             onPressed: _saveImage,
-            color: Colors.amber,
           )
         ],
       ),
@@ -98,7 +96,6 @@ class _WallpaperDetailState extends State<WallpaperDetail> {
                 }
                 return Center(
                   child: CircularProgressIndicator(
-                    color: Colors.amber,
                     value: loadingProgress.expectedTotalBytes != null
                         ? loadingProgress.cumulativeBytesLoaded /
                             loadingProgress.expectedTotalBytes!

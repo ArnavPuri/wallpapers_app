@@ -16,6 +16,8 @@ void main() => runApp(
               actionsIconTheme: IconThemeData(color: Colors.white),
               titleTextStyle: TextStyle(color: Colors.white, fontSize: 22)),
         ),
+        darkTheme: ThemeData.dark(),
+        themeMode: ThemeMode.dark,
       ),
     );
 
@@ -46,7 +48,6 @@ class _HomePageState extends State<HomePage> {
                     MaterialPageRoute(
                         builder: (context) => const SettingsScreen()))
               },
-              color: Colors.amber,
             )
           ],
           bottom: TabBar(
