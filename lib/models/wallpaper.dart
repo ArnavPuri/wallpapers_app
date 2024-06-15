@@ -4,17 +4,23 @@ class Wallpaper {
   final String thumbnailUrl;
   final int upvotes;
   final String subreddit;
+  final String created;
 
-  Wallpaper(
-      this.url, this.title, this.thumbnailUrl, this.upvotes, this.subreddit);
+  Wallpaper(this.url, this.title, this.thumbnailUrl, this.upvotes,
+      this.subreddit, this.created);
 
   factory Wallpaper.fromJSON(Map<String, dynamic> data) {
+    String thumbnailUrlFromJSON = data['data']['thumbnail'];
+    String detailUrl = data['data']['url'];
     return Wallpaper(
-        data['data']['url'],
+        detailUrl,
         data['data']['title'],
-        data['data']['thumbnail'],
+        thumbnailUrlFromJSON.contains("http")
+            ? thumbnailUrlFromJSON
+            : detailUrl,
         data['data']['ups'],
-        data['data']['subreddit_name_prefixed']);
+        data['data']['subreddit_name_prefixed'],
+        data['data']['created_utc'].toString());
   }
 
   @override

@@ -10,8 +10,9 @@ import 'package:http/http.dart' as http;
 
 class WallpaperDetail extends StatefulWidget {
   final Wallpaper wallpaper;
+  final String tag;
 
-  const WallpaperDetail(this.wallpaper);
+  const WallpaperDetail(this.wallpaper, this.tag, {super.key});
 
   @override
   _WallpaperDetailState createState() => _WallpaperDetailState();
@@ -85,7 +86,7 @@ class _WallpaperDetailState extends State<WallpaperDetail> {
       ),
       body: SizedBox.expand(
         child: Hero(
-          tag: widget.wallpaper.url + widget.wallpaper.title,
+          tag: widget.tag,
           child: Image(
               image: NetworkImage(widget.wallpaper.url),
               fit: BoxFit.cover,

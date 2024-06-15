@@ -7,14 +7,15 @@ class WallpaperList extends StatefulWidget {
   final String category;
 
   const WallpaperList({
+    super.key,
     required this.category,
   });
 
   @override
-  _WallpaperListState createState() => _WallpaperListState();
+  WallpaperListState createState() => WallpaperListState();
 }
 
-class _WallpaperListState extends State<WallpaperList>
+class WallpaperListState extends State<WallpaperList>
     with AutomaticKeepAliveClientMixin<WallpaperList> {
   late Future<List<Wallpaper>> wallpapersList;
   NetworkHelper networkHelper = NetworkHelper();
@@ -22,40 +23,44 @@ class _WallpaperListState extends State<WallpaperList>
   @override
   void initState() {
     super.initState();
-    wallpapersList = networkHelper.getWallpapersList(widget.category);
+    wallpapersList = networkHelper.getWallpapersList(
+        widget.category, widget.category == 'new');
   }
 
   @override
-  bool get wantKeepAlive => true;
+  bool get wantKeepAlive => false;
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return FutureBuilder(
       future: wallpapersList,
       builder: (context, AsyncSnapshot<List<Wallpaper>> snapshot) {
         if (snapshot.hasData) {
+          var data = snapshot.data;
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2, crossAxisSpacing: 1.0, mainAxisSpacing: 1.0),
             shrinkWrap: true,
-            itemCount: snapshot.data?.length,
+            itemCount: data?.length,
             itemBuilder: (context, index) {
+              var item = data![index];
+              var tag = item.url + widget.category;
               return GestureDetector(
                 onTap: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              WallpaperDetail(snapshot.data![index])));
+                          builder: (context) => WallpaperDetail(item, tag)));
                 },
                 child: Hero(
-                  tag: snapshot.data![index].url + snapshot.data![index].title,
+                  tag: tag,
                   child: AspectRatio(
                       aspectRatio: 9 / 16,
                       child: Stack(
                         children: [
                           Image.network(
-                            snapshot.data![index].thumbnailUrl,
+                            item.thumbnailUrl,
                             fit: BoxFit.cover,
                             width: double.infinity,
                             height: double.infinity,
@@ -77,7 +82,7 @@ class _WallpaperListState extends State<WallpaperList>
                                   width: 10,
                                 ),
                                 Text(
-                                  snapshot.data![index].upvotes.toString(),
+                                  item.upvotes.toString(),
                                   style: const TextStyle(
                                     color: Colors.white70,
                                     fontSize: 18.0,
