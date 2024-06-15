@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 
 import 'package:path_provider/path_provider.dart';
@@ -72,6 +74,70 @@ class _WallpaperDetailState extends State<WallpaperDetail> {
     ));
   }
 
+  void _setWallpaper() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const AlertDialog(
+          title: Text('Setting Wallpaper'),
+          content: Row(
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(width: 20),
+              Expanded(
+                  child: Text('Please wait while we set your wallpaper...')),
+            ],
+          ),
+        );
+      },
+    );
+    try {
+      final response = await http.get(Uri.parse(widget.wallpaper.url));
+      if (response.statusCode == 200) {
+        Uint8List imageData = response.bodyBytes;
+        const platform =
+            MethodChannel('com.arnavpuri.reddit_wallpapers_app/setWallpaper');
+
+        final result = await platform.invokeMethod('setWallpaper', imageData);
+        Navigator.pop(context); // Close the loading dialog
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(result)));
+      } else {
+        throw Exception('Failed to load image');
+      }
+    } catch (e) {
+      Navigator.pop(context); // Close the loading dialog
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Failed to set wallpaper: $e')));
+    }
+  }
+
+  void _showSetWallpaperDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Set Wallpaper'),
+          content: Text('Do you want to set this image as your wallpaper?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _setWallpaper();
+              },
+              child: Text('Set Wallpaper'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,6 +147,10 @@ class _WallpaperDetailState extends State<WallpaperDetail> {
           IconButton(
             icon: const Icon(Icons.file_download),
             onPressed: _saveImage,
+          ),
+          IconButton(
+            icon: const Icon(Icons.wallpaper),
+            onPressed: _showSetWallpaperDialog,
           )
         ],
       ),

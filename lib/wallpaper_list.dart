@@ -28,7 +28,7 @@ class WallpaperListState extends State<WallpaperList>
   }
 
   @override
-  bool get wantKeepAlive => false;
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {

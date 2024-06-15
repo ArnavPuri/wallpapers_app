@@ -7,8 +7,6 @@ void main() => runApp(
         home: HomePage(),
         debugShowCheckedModeBanner: false,
         theme: ThemeData().copyWith(
-          primaryColor: Colors.black,
-          hintColor: Colors.orange,
           scaffoldBackgroundColor: Colors.black,
           appBarTheme: const AppBarTheme(
               backgroundColor: Colors.black,
@@ -50,10 +48,10 @@ class _HomePageState extends State<HomePage> {
               },
             )
           ],
-          bottom: TabBar(
-            indicatorColor: Theme.of(context).hintColor,
-            unselectedLabelColor: Colors.white,
-            labelColor: Theme.of(context).hintColor,
+          bottom: const TabBar(
+            indicatorColor: Colors.amber,
+            unselectedLabelColor: Colors.white54,
+            labelColor: Colors.amber,
             tabs: const [
               Tab(
                 icon: Icon(Icons.card_giftcard),
