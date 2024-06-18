@@ -1,11 +1,9 @@
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
-
 import 'package:path_provider/path_provider.dart';
 import 'package:reddit_wallpapers_app/models/wallpaper.dart';
 import 'package:http/http.dart' as http;
@@ -23,7 +21,7 @@ class WallpaperDetail extends StatefulWidget {
 class _WallpaperDetailState extends State<WallpaperDetail> {
   Future<void> _saveImage() async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
-    late String message;
+    String message = "Image saved to disk";
 
     try {
       // Download image
@@ -42,11 +40,7 @@ class _WallpaperDetailState extends State<WallpaperDetail> {
 
       // Ask the user to save it
       final params = SaveFileDialogParams(sourceFilePath: file.path);
-      final finalPath = await FlutterFileDialog.saveFile(params: params);
-
-      if (finalPath != null) {
-        message = 'Image saved to disk';
-      }
+      await FlutterFileDialog.saveFile(params: params);
     } catch (e) {
       message = e.toString();
       scaffoldMessenger.showSnackBar(SnackBar(
@@ -75,10 +69,13 @@ class _WallpaperDetailState extends State<WallpaperDetail> {
   }
 
   void _setWallpaper() async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    dynamic dialogContext;
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
+        dialogContext = context;
         return const AlertDialog(
           title: Text('Setting Wallpaper'),
           content: Row(
@@ -98,17 +95,19 @@ class _WallpaperDetailState extends State<WallpaperDetail> {
         Uint8List imageData = response.bodyBytes;
         const platform =
             MethodChannel('com.arnavpuri.reddit_wallpapers_app/setWallpaper');
-
         final result = await platform.invokeMethod('setWallpaper', imageData);
-        Navigator.pop(context); // Close the loading dialog
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(result)));
+        if (dialogContext.mounted) {
+          Navigator.pop(dialogContext); // Close the loading dialog
+        }
+        scaffoldMessenger.showSnackBar(SnackBar(content: Text(result)));
       } else {
         throw Exception('Failed to load image');
       }
     } catch (e) {
-      Navigator.pop(context); // Close the loading dialog
-      ScaffoldMessenger.of(context)
+      if (dialogContext.mounted) {
+        Navigator.pop(dialogContext); // Close the loading dialog
+      }
+      scaffoldMessenger
           .showSnackBar(SnackBar(content: Text('Failed to set wallpaper: $e')));
     }
   }
