@@ -93,13 +93,12 @@ class _WallpaperDetailState extends State<WallpaperDetail> {
       final response = await http.get(Uri.parse(widget.wallpaper.url));
       if (response.statusCode == 200) {
         Uint8List imageData = response.bodyBytes;
-        const platform =
-            MethodChannel('com.arnavpuri.reddit_wallpapers_app/setWallpaper');
-        final result = await platform.invokeMethod('setWallpaper', imageData);
         if (dialogContext.mounted) {
           Navigator.pop(dialogContext); // Close the loading dialog
         }
-        scaffoldMessenger.showSnackBar(SnackBar(content: Text(result)));
+        const platform =
+            MethodChannel('com.arnavpuri.reddit_wallpapers_app/setWallpaper');
+        final result = await platform.invokeMethod('setWallpaper', imageData);
       } else {
         throw Exception('Failed to load image');
       }
@@ -107,8 +106,6 @@ class _WallpaperDetailState extends State<WallpaperDetail> {
       if (dialogContext.mounted) {
         Navigator.pop(dialogContext); // Close the loading dialog
       }
-      scaffoldMessenger
-          .showSnackBar(SnackBar(content: Text('Failed to set wallpaper: $e')));
     }
   }
 
@@ -117,19 +114,20 @@ class _WallpaperDetailState extends State<WallpaperDetail> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Set Wallpaper'),
-          content: Text('Do you want to set this image as your wallpaper?'),
+          title: const Text('Set Wallpaper'),
+          content:
+              const Text('Do you want to set this image as your wallpaper?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
                 _setWallpaper();
               },
-              child: Text('Set Wallpaper'),
+              child: const Text('Set Wallpaper'),
             ),
           ],
         );
